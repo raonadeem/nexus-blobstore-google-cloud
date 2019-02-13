@@ -17,4 +17,5 @@ RUN cd /opt/plugins/nexus-blobstore-google-cloud/ && \
 
 RUN chown -R nexus:nexus /opt/sonatype/
 
+
 USER nexus
