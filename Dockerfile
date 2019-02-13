@@ -3,7 +3,7 @@ WORKDIR /build
 RUN git clone https://github.com/raonadeem/nexus-blobstore-google-cloud.git .
 RUN mvn clean package
 
-FROM sonatype/nexus3:3.13.0
+FROM sonatype/nexus3
 ADD install-plugin.sh /opt/plugins/nexus-blobstore-google-cloud/
 COPY --from=nexus-blobstore-google-cloud /build/target/ /opt/plugins/nexus-blobstore-google-cloud/target/
 COPY --from=nexus-blobstore-google-cloud /build/pom.xml /opt/plugins/nexus-blobstore-google-cloud/
