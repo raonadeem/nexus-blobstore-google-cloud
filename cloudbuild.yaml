@@ -16,3 +16,27 @@ steps:
   args:
   - 'push'
   - 'gcr.io/$PROJECT_ID/nexus:$SHORT_SHA'
+
+# This step generates the new manifest
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Generate manifest
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+     sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
+     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > kubernetes.yaml
+
+# This step deploys the new version of our container image
+# in the nexus-gke Kubernetes Engine cluster.
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: Deploy
+  args:
+  - 'apply'
+  - '-f'
+  - 'kubernetes.yaml'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=asia-east1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=nexus-gke'
+images:
+  - 'gcr.io/$PROJECT_ID/nexus:$SHORT_SHA'
