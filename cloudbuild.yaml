@@ -6,7 +6,7 @@ steps:
   - 'build'
   - '-t'
   - 'gcr.io/$PROJECT_ID/nexus:$SHORT_SHA'
-  - '.'
+  - 'docker-build/'
 
 # This step pushes the image to Container Registry
 # The PROJECT_ID and SHORT_SHA variables are automatically
@@ -24,7 +24,7 @@ steps:
   args:
   - '-c'
   - |
-     sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
+     sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kube-deploy/kubernetes.yaml.tpl | \
      sed "s/COMMIT_SHA/${SHORT_SHA}/g" > kubernetes.yaml
 
 # This step deploys the new version of container image
